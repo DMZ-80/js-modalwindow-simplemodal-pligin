@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simple Modal - JS Animation & Plugin System</title>
+</head>
+<body>
+<main>
+  <section class="section--01">
+    <div class="section-wrap">
+      <div class="section-header">
+        <h2 class="section-title">画像を表示（画像モード）</h2>
+      </div>
+      <div class="section-contents">
+        <div class="section-item">
+          <a href="https://8344d0083b78f49b.lolipop.jp/img/l99s/sp/francesco-liotti-oaZJkQUHFUM-unsplash.jpg" class="simpleModal-trigger" data-group="modal-group-1">
+            <img src="https://8344d0083b78f49b.lolipop.jp/img/l99s/pc/francesco-liotti-oaZJkQUHFUM-unsplash.jpg" alt="">
+          </a>
+        </div>
+        <div class="section-item">
+          <a href="https://8344d0083b78f49b.lolipop.jp/img/l99s/sp/vicko-mozara-m82uh_vamhg-unsplash.jpg" class="simpleModal-trigger" data-group="modal-group-1">
+            <img src="https://8344d0083b78f49b.lolipop.jp/img/l99s/pc/vicko-mozara-m82uh_vamhg-unsplash.jpg" alt="">
+          </a>
+        </div>
+        <div class="section-item">
+          <a href="https://8344d0083b78f49b.lolipop.jp/img/l99s/sp/marko-kelecevic-1gMmmVdcIl8-unsplash.jpg" class="simpleModal-trigger" data-group="modal-group-1">
+            <img src="https://8344d0083b78f49b.lolipop.jp/img/l99s/pc/marko-kelecevic-1gMmmVdcIl8-unsplash.jpg" alt="">
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section--01">
+    <div class="section-wrap">
+      <div class="section-header">
+        <h2 class="section-title">画像をグループ化して表示（ギャラリーモード）</h2>
+      </div>
+      <div class="section-contents">
+        <div class="section-item">
+          <a href="https://8344d0083b78f49b.lolipop.jp/img/l99s/sp/francesco-liotti-oaZJkQUHFUM-unsplash.jpg" class="simpleModal-trigger" data-group="modal-group-1">
+            <img src="https://8344d0083b78f49b.lolipop.jp/img/l99s/pc/francesco-liotti-oaZJkQUHFUM-unsplash.jpg" alt="">
+          </a>
+        </div>
+        <div class="section-item">
+          <a href="https://8344d0083b78f49b.lolipop.jp/img/l99s/sp/vicko-mozara-m82uh_vamhg-unsplash.jpg" class="simpleModal-trigger" data-group="modal-group-1">
+            <img src="https://8344d0083b78f49b.lolipop.jp/img/l99s/pc/vicko-mozara-m82uh_vamhg-unsplash.jpg" alt="">
+          </a>
+        </div>
+        <div class="section-item">
+          <a href="https://8344d0083b78f49b.lolipop.jp/img/l99s/sp/marko-kelecevic-1gMmmVdcIl8-unsplash.jpg" class="simpleModal-trigger" data-group="modal-group-1">
+            <img src="https://8344d0083b78f49b.lolipop.jp/img/l99s/pc/marko-kelecevic-1gMmmVdcIl8-unsplash.jpg" alt="">
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section--01 modaltextMode">
+    <div class="section-wrap">
+      <div class="section-header">
+        <h2 class="section-title">テキストなどのコンテンツを表示（インラインモード）</h2>
+      </div>
+      <div class="section-contents">
+        <div class="section-item">
+          <a href="#content-1" class="simpleModal-trigger" data-group="modal-group-2">Long Text</a>
+          <div id="content-1" class="hidden">
+            <div>
+              <h3>インラインモード1</h3>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+            </div>
+          </div>
+        </div>
+        <div class="section-item">
+          <a href="#content-2" class="simpleModal-trigger" data-group="modal-group-2">Long Text</a>
+          <div id="content-2" class="hidden">
+            <div>
+              <h3>インラインモード2</h3>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+            </div>
+          </div>
+        </div>
+        <div class="section-item">
+          <a href="#content-3" class="simpleModal-trigger" data-group="modal-group-2">Long Text</a>
+          <div id="content-3" class="hidden">
+            <div>
+              <h3>インラインモード3</h3>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- モーダル HTML 構造 -->
+  <div id="simpleModal">
+    <div class="simpleModal-overlay simpleModal-hidden">
+      <div class="simpleModal-background"></div>
+      <button class="simpleModal-nav-btn simpleModal-prev-btn">
+        <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+      </button>
+      <button class="simpleModal-nav-btn simpleModal-next-btn">
+        <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+      </button>
+      <div id="modalWrapper" class="simpleModal-wrapper">
+        <button class="simpleModal-floating-close">
+          <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+        </button>
+        <div class="simpleModal-floating-pagination"></div>
+        
+        <div class="simpleModal-header">
+          <h2 id="modalTitle">タイトル</h2>
+          <button class="simpleModal-close-btn-icon">
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+          </button>
+        </div>
+        <div class="simpleModal-content">
+          <div class="simpleModal-body">
+            <div id="modalSpinner" class="simpleModal-spinner simpleModal-hidden"></div>
+            <div id="inlineContainer" class="simpleModal-hidden"></div>
+            <div id="imageContainer" class="simpleModal-image-container simpleModal-hidden">
+              <img id="modalImage" src="" alt="Modal Image">
+            </div>
+          </div>
+        </div>
+        <div class="simpleModal-footer">
+          <span class="simpleModal-inline-pagination" style="font-size: 0.9rem; color: #666;"></span>
+          <div>
+            <button class="simpleModal-close-btn btn btn-ghost">閉じる</button>
+            <button class="simpleModal-close-btn btn btn-blue">OK</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<script type="module" src="./src/main.js"></script>
+</body>
+</html>

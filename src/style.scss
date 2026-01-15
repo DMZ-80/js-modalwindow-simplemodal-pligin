@@ -1,0 +1,471 @@
+@charset "utf-8";
+@use "sass:map";
+@import url("https://cdn.jsdelivr.net/npm/destyle.css@1.0.15/destyle.css");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Noto+Sans+JP:wght@100..900&display=swap");
+/*
+font-family: "Noto Sans JP", sans-serif;
+font-family: "Montserrat", sans-serif;
+*/
+
+$breakpoints: (
+  mmxxs: 'max-width: 375px',
+  mmxs: 'max-width: 480px',
+  mms: 'max-width: 568px',
+  mm: 'max-width: 820px',
+  mml: 'max-width: 1024px',
+  mmxl: 'max-width: 1180px',
+  mmxxl: 'max-width: 1366px',
+  pcs: 'max-width: 1400px',
+  pc: 'max-width: 1600px',
+  pc_hover: '(hover: hover) and (pointer: fine)'
+);
+
+@mixin media-breakpoint($breakpoint-name) {
+  // マップからブレークポイントの値を取得
+  $breakpoint-value: map.get($breakpoints, $breakpoint-name);
+
+  // 指定されたブレークポイント名が存在するかチェック
+  @if ($breakpoint-value) {
+    // 取得した値をそのままメディアクエリの条件部分として使う
+    @media only screen and (#{$breakpoint-value}) {
+      @content;
+    }
+  } @else {
+    // 存在しないブレークポイント名が指定された場合はエラー
+    @error "`#{$breakpoint-name}` というブレークポイントは `$breakpoints` マップに存在しません。";
+  }
+}
+
+body {
+  color: #4b5563;
+  font-family: "Noto Sans JP", sans-serif;
+
+  align-items: center;
+  background-color: #f1f1f1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 0 50svh;
+}
+
+$gutter_pc: 8vw;
+$gutter_sp: 4vw;
+
+:root {
+  --bg-gray: #f3f4f6;
+  --border-color: #f3f4f6;
+  --emerald-color: #059669;
+  --emerald-hover: #047857;
+  --primary-color: #2563eb;
+  --primary-hover: #1d4ed8;
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --text-main: #1f2937;
+  --text-muted: #4b5563;
+}
+
+#simpleModal {
+  /* モーダルオーバーレイ */
+  .simpleModal-overlay {
+    align-items: center;
+    display: flex;
+    inset: 0;
+    justify-content: center;
+    padding: 0;
+    perspective: 800px;
+    pointer-events: auto;
+    position: fixed;
+    visibility: visible;
+    z-index: 1000;
+
+    /* モーダル背景 */
+    .simpleModal-background {
+      backdrop-filter: blur(5px);
+      background-color: rgba(0, 0, 0, 0.85);
+      inset: 0;
+      opacity: 0;
+      position: absolute;
+      z-index: -1;
+    }
+
+    /* モーダルラッパー */
+    .simpleModal-wrapper {
+      background: #fff;
+      box-shadow: var(--shadow-2xl);
+      display: flex;
+      flex-direction: column;
+      height: auto;
+      opacity: 0;
+      overflow: hidden;
+      perspective: 800px;
+      pointer-events: auto;
+      position: relative;
+      transform-style: preserve-3d;
+      width: auto;
+    }
+
+    /* UIパーツ */
+    .simpleModal-header {
+      align-items: center;
+      background: #fff;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      flex-shrink: 0;
+      justify-content: space-between;
+      padding: 1rem 1.5rem;
+    }
+
+    .simpleModal-header {
+      h2 {
+        color: var(--text-main);
+        font-size: 1.25rem;
+        font-weight: 700;
+
+        margin: 0;
+      }
+    }
+
+    /* モーダルコンテンツ */
+    .simpleModal-content {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      min-height: 0;
+      opacity: 0;
+      transform-style: preserve-3d;
+      width: 100%;
+    }
+
+    .simpleModal-body {
+      background: #fff;
+      flex: 1;
+      min-width: 300px;
+      overflow-y: auto;
+      position: relative;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .simpleModal-footer {
+      align-items: center;
+      background-color: #f9fafb;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      flex-shrink: 0;
+      gap: 0.75rem;
+      justify-content: space-between;
+      padding: 1rem 1.5rem;
+    }
+
+    /* スピナースタイル */
+    .simpleModal-spinner {
+      animation: modal-spin 0.8s linear infinite;
+      border-color: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      border-style: solid;
+      border-top-color: #fff;
+      border-width: 3px;
+      height: 40px;
+      left: 50%;
+      margin-left: -20px;
+      margin-top: -20px;
+      pointer-events: none;
+      position: absolute;
+      top: 50%;
+      width: 40px;
+      z-index: 20;
+    }
+
+    @keyframes modal-spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* コントロール */
+    .simpleModal-floating-close {
+      color: #fff;
+
+      align-items: center;
+      backdrop-filter: blur(4px);
+      background: rgba(0, 0, 0, 0.5);
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      height: 36px;
+      justify-content: center;
+      opacity: 0;
+      position: absolute;
+      right: 15px;
+      top: 15px;
+      width: 36px;
+      z-index: 1100;
+    }
+
+    .simpleModal-nav-btn {
+      color: #fff;
+
+      align-items: center;
+      backdrop-filter: blur(4px);
+      background: rgba(0, 0, 0, 0.3);
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      height: 48px;
+      justify-content: center;
+      opacity: 0;
+      padding: 8px;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 48px;
+      z-index: 1200;
+
+      @include media-breakpoint(mm) {
+        height: 32px;
+        width: 32px;
+      }
+
+      svg {
+        height: 100%;
+        max-height: 20px;
+        width: 100%;
+        max-width: 20px;
+      }
+    }
+
+    .simpleModal-prev-btn {
+      left: 20px;
+
+      @include media-breakpoint(mm) {
+        left: 10px;
+      }
+    }
+
+    .simpleModal-next-btn {
+      right: 20px;
+
+      @include media-breakpoint(mm) {
+        right: 10px;
+      }
+    }
+
+    .simpleModal-floating-pagination {
+      color: #000;
+      font-size: 0.8rem;
+
+      backdrop-filter: blur(4px);
+      background: rgba(255, 255, 255, 0.5);
+      border-radius: 0;
+      display: none;
+      left: 20px;
+      padding: 2px 16px;
+      pointer-events: none;
+      position: absolute;
+      top: 20px;
+      z-index: 1100;
+    }
+
+    .simpleModal-close-btn-icon {
+      color: #9ca3af;
+
+      align-items: center;
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      padding: 0.25rem;
+    }
+
+    /* 画像モード */
+    &.simpleModal-imageMode {
+      .simpleModal-wrapper {
+        // background: transparent;
+        box-shadow: none;
+        // height: 100% !important;
+        min-height: 0;
+        max-height: 100%;
+        // width: 100% !important;
+        min-width: 0;
+        max-width: 100%;
+      }
+
+      .simpleModal-header,
+      .simpleModal-footer {
+        display: none;
+      }
+
+      .simpleModal-content {
+        align-items: center;
+        justify-content: center;
+        min-height: 0;
+      }
+
+      .simpleModal-body {
+        align-items: center;
+        background: transparent;
+        display: flex;
+        height: 100%;
+        justify-content: center;
+        min-height: 0;
+        min-width: 0;
+        overflow: hidden;
+        padding: 0;
+        width: 100%;
+      }
+
+      /* 画像コンテナ */
+      .simpleModal-image-container {
+        align-items: center;
+        display: flex;
+        height: 100%;
+        justify-content: center;
+        min-height: 0;
+        min-width: 0;
+        pointer-events: none;
+        width: 100%;
+
+        img {
+          display: block;
+          height: auto;
+          max-height: 100%;
+          max-width: 100%;
+          object-fit: contain;
+          pointer-events: auto;
+          width: auto;
+        }
+      }
+    }
+
+    /* インラインモード */
+    &.simpleModal-inlineMode {
+      padding: 40px;
+
+      @include media-breakpoint(mm) {
+        padding: 10px;
+      }
+
+      .simpleModal-wrapper {
+        max-height: calc(100% - 120px);
+        max-width: 1400px;
+
+        @include media-breakpoint(mm) {
+          max-height: 100%;
+        }
+
+        .simpleModal-body {
+          padding: 60px 40px;
+
+          @include media-breakpoint(mm) {
+            padding: 20px;
+          }
+          
+          h3 {
+            font-size: 20px;
+
+            margin: 0 0 24px;
+          }
+
+          p {
+            font-size: 16px;
+            line-height: 2;
+
+            & + p {
+              margin-top: 12px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .simpleModal-visible {
+    display: flex !important;
+  }
+
+  .simpleModal-hidden {
+    display: none !important;
+  }
+}
+
+
+
+.section--01 {
+  margin: 200px auto 0;
+
+  @include media-breakpoint(mm) {
+    margin: 100px auto 0;
+  }
+
+  .section-wrap {
+    padding: 0 $gutter_pc;
+
+    @include media-breakpoint(mm) {
+      padding: 0 $gutter_sp;
+    }
+  }
+
+  .section-header {
+    margin: 0 0 40px;
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 600;
+      text-align: center;
+
+      @include media-breakpoint(mm) {
+        font-size: 20px;
+      }
+    }
+  }
+  
+  .section-contents {
+    display: flex;
+    gap: 30px;
+    max-width: 1400px;
+
+    @include media-breakpoint(mm) {
+      flex-flow: column;
+    }
+
+    .section-item {
+      width: 33.33%;
+
+      @include media-breakpoint(mm) {
+        width: 100%;
+      }
+      
+      img {
+        aspect-ratio: 1/1;
+        object-fit: cover;
+        height: 100%;
+        width: 100%;
+      }
+    }
+  }
+
+  &.modaltextMode {
+    .section-item {
+      text-align: center;
+
+      a {
+        display: inline-block;
+
+        background-color: #ddd;
+        padding: 16px 20px;
+        width: 100%;
+      }
+    }
+  }
+}
+
+
+
+/* デモスタイル */
+.visible {
+  display: flex !important;
+}
+
+.hidden {
+  display: none !important;
+}
