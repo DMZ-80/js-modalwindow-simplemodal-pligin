@@ -204,33 +204,32 @@ $gutter_sp: 4vw;
     .simpleModal-nav-btn {
       color: #fff;
 
-      align-items: center;
+      align-items: center; /* 垂直中央揃え */
+      justify-content: center; /* 水平中央揃え */
       backdrop-filter: blur(4px);
       background: rgba(0, 0, 0, 0.3);
       border: none;
       border-radius: 50%;
       cursor: pointer;
-      display: none;
+      display: none; /* JSでflexに変更される */
       height: 48px;
-      justify-content: center;
-      opacity: 0;
-      padding: 8px;
+      width: 48px;
+      padding: 0; /* パディングを削除してFlexboxで制御 */
       position: absolute;
       top: 50%;
-      transform: translateY(-50%);
-      width: 48px;
+      /* transform: translateY(-50%);  JSのアニメーションでtransformが上書きされるため削除 */
+      margin-top: -24px; /* 高さの半分をネガティブマージンで指定して中央揃え */
       z-index: 1200;
 
       @include media-breakpoint(mm) {
         height: 32px;
         width: 32px;
+        margin-top: -16px; /* モバイル用: 高さ32pxの半分 */
       }
 
       svg {
-        height: 100%;
-        max-height: 20px;
-        width: 100%;
-        max-width: 20px;
+        height: 24px; /* 固定サイズに変更 */
+        width: 24px;  /* 固定サイズに変更 */
       }
     }
 

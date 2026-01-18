@@ -2,9 +2,6 @@ import './style.scss';
 
 
 
-/**
- * SimpleModal クラス
- */
 class SimpleModal {
   /**
    * コンストラクタ
@@ -34,7 +31,9 @@ class SimpleModal {
     this.groupList = [];      // ギャラリー表示用の要素リスト
     this.currentIndex = -1;   // 現在表示中のグループ内インデックス
     this.currentMode = '';    // 'inline' または 'image'
-    this.lastWrapperSize = { w: 0, h: 0 }; // リサイズアニメーション用の前回サイズ
+    
+    // リサイズアニメーション用のサイズ管理
+    // lastWrapperSize は不要になったため削除し、直接style操作で制御します
 
     this.touchStartX = 0;
     this.touchMinDistance = 50;
@@ -189,18 +188,80 @@ class SimpleModal {
       }
     }, { passive: true });
 
+    // 画像読み込み完了イベント
     this.modalImage.onload = () => {
       if (this.spinner) this.spinner.classList.add('simpleModal-hidden');
+      
+      // 画像モードの場合のみサイズ計算を行う
+      if (this.currentMode === 'image') {
+        const setSize = () => {
+          const img = this.modalImage;
+          const container = this.imageContainer;
+          
+          // オリジナルのアスペクト比を取得
+          const naturalWidth = img.naturalWidth;
+          const naturalHeight = img.naturalHeight;
+          const aspectRatio = naturalWidth / naturalHeight;
 
-      if (this.modalImage.naturalWidth && this.modalImage.naturalHeight) {
-        const ratio = `${this.modalImage.naturalWidth} / ${this.modalImage.naturalHeight}`;
-        this.modalImage.style.aspectRatio = ratio;
+          // コンテナのパディングを取得して計算に利用
+          const style = window.getComputedStyle(container);
+          const paddingX = parseFloat(style.paddingLeft) + parseFloat(style.paddingRight);
+          const paddingY = parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
+
+          // ビューポートのサイズを取得 (1.0倍 = 100%) からパディングを引く
+          const maxWidth = window.innerWidth - paddingX;
+          const maxHeight = window.innerHeight - paddingY;
+
+          let targetWidth = naturalWidth;
+          let targetHeight = naturalHeight;
+
+          // 幅が最大幅を超える場合、幅を基準に縮小
+          if (targetWidth > maxWidth) {
+            targetWidth = maxWidth;
+            targetHeight = targetWidth / aspectRatio;
+          }
+
+          // 高さが最大高さを超える場合、高さを基準に縮小
+          if (targetHeight > maxHeight) {
+            targetHeight = maxHeight;
+            targetWidth = targetHeight * aspectRatio;
+          }
+
+          // 計算したサイズを適用
+          img.style.width = `${targetWidth}px`;
+          img.style.height = `${targetHeight}px`;
+          img.style.maxWidth = 'none'; // CSS制限を解除
+          img.style.maxHeight = 'none'; // CSS制限を解除
+          
+          // コンテナのサイズも合わせる（必要に応じて）
+          // padding分を足したサイズをコンテナの幅・高さとして設定
+          container.style.width = `${targetWidth + paddingX}px`;
+          container.style.height = `${targetHeight + paddingY}px`;
+        };
+
+        setSize(); // 初回実行
+
+        // ウィンドウリサイズ時にも再計算するようにリスナーを追加
+        // (以前のリスナーがあれば削除しておくのがベストだが、簡易実装として追加のみ)
+        if (!this._resizeListener) {
+            this._resizeListener = () => {
+                if (this.currentMode === 'image' && !this.overlay.classList.contains('simpleModal-hidden')) {
+                    setSize();
+                }
+            };
+            window.addEventListener('resize', this._resizeListener);
+        }
       }
 
+      // 画像モードかつアニメーション中の場合（switchContentからの呼び出しを想定）
       if (this.currentMode === 'image' && this.isAnimating) {
+        // ラッパーが既に表示されている場合（切り替え時）
         if (this.wrapper.style.opacity === '1' || parseFloat(this.wrapper.style.opacity) > 0) {
-          // 切り替え時はリサイズアニメの後にフェードイン。全体の開きアニメは走らせない。
-          this.animateResize(this.wrapper).then(() => this.showContent(true, false));
+          // リサイズアニメーションを実行後にフェードイン
+          // ここが重要：画像が読み込まれて初めて枠のサイズを変える
+          this.animateResize(this.wrapper).then(() => {
+            this.showContent(true, false);
+          });
         } else {
           // 初回表示時
           this.showWrapper();
@@ -209,22 +270,40 @@ class SimpleModal {
     };
   }
 
+  // サイズ変更アニメーションの修正
   async animateResize(targetEl) {
-    if (!this.lastWrapperSize.w || !this.lastWrapperSize.h) return Promise.resolve();
-    const startWidth = this.lastWrapperSize.w;
-    const startHeight = this.lastWrapperSize.h;
+    // 現在の固定サイズ（style属性の値）を取得
+    const startWidth = targetEl.style.width;
+    const startHeight = targetEl.style.height;
     
-    targetEl.style.width = 'auto'; targetEl.style.height = 'auto';
+    // 一度 auto にして、新しいコンテンツが入った状態での本来のサイズを計測する
+    targetEl.style.width = 'auto'; 
+    targetEl.style.height = 'auto';
     const targetWidth = targetEl.offsetWidth;
     const targetHeight = targetEl.offsetHeight;
 
+    // 計測が終わったら、アニメーション開始のために一度元の固定サイズに戻す
+    // ただし、startWidthなどが 'auto' だったり空だったりする場合は今のサイズを使う
+    if (!startWidth || startWidth === 'auto') {
+        // 初回表示時などはここに来る可能性があるが、その場合はアニメーション不要または
+        // 現在のオフセット値を使う
+        targetEl.style.width = `${targetEl.offsetWidth}px`;
+        targetEl.style.height = `${targetEl.offsetHeight}px`;
+    } else {
+        targetEl.style.width = startWidth;
+        targetEl.style.height = startHeight;
+    }
+
+    // アニメーション実行
     const animation = targetEl.animate([
-      { width: `${startWidth}px`, height: `${startHeight}px` },
+      { width: targetEl.style.width, height: targetEl.style.height },
       { width: `${targetWidth}px`, height: `${targetHeight}px` }
     ], { duration: 350, easing: 'cubic-bezier(0.4, 0, 0.2, 1)', fill: 'both' });
 
     return animation.finished.then(() => {
-      targetEl.style.width = 'auto'; targetEl.style.height = 'auto';
+      // アニメーション完了後はサイズ制限を解除してレスポンシブに対応させる
+      targetEl.style.width = 'auto'; 
+      targetEl.style.height = 'auto';
       animation.cancel();
     });
   }
@@ -327,18 +406,15 @@ class SimpleModal {
     if (el.tagName === 'A' && el.classList.contains('simpleModal-trigger')) {
       const href = el.getAttribute('href');
       if (href && href.startsWith('#') && href.length > 1) {
-        // アンカーリンク（ID指定）の場合はインラインモードで開く
         const targetId = href.substring(1);
         const targetEl = document.getElementById(targetId);
         if (targetEl) {
           this.open('inline', { title: el.textContent, content: targetEl.innerHTML });
         }
       } else {
-        // それ以外（画像URLなど）は画像モードで開く
         this.open('image', { src: href });
       }
     } else if (el.dataset.target) {
-      // data-target属性がある場合はインラインモードで開く
       const targetEl = document.getElementById(el.dataset.target);
       if (targetEl) {
         this.open('inline', { title: el.textContent, content: targetEl.innerHTML });
@@ -351,6 +427,10 @@ class SimpleModal {
     this.isAnimating = true; 
     this.currentMode = mode;
     this.wrapper.style.aspectRatio = '';
+    
+    // スタイル初期化時はサイズ固定を解除
+    this.wrapper.style.width = 'auto';
+    this.wrapper.style.height = 'auto';
     
     [this.background, this.wrapper, this.content, this.floatingClose, this.prevBtn, this.nextBtn].forEach(el => {
       el.getAnimations().forEach(anim => anim.cancel());
@@ -387,7 +467,6 @@ class SimpleModal {
   }
 
   async showWrapper() {
-    // 初回オープン時は全体の開きアニメーションを実行する
     await Promise.all([
       this.runAnimation(this.background, 'background', 'open'),
       this.runAnimation(this.wrapper, 'wrapper', 'open'),
@@ -418,12 +497,10 @@ class SimpleModal {
       this.runAnimation(this.content, 'content', 'close') 
     ];
 
-    // フローティング閉じるボタンのアニメーション
     if (this.floatingClose.classList.contains('simpleModal-visible')) {
       promises.push(this.runAnimation(this.floatingClose, 'button', 'close'));
     }
     
-    // ナビゲーションボタンのアニメーションを追加
     if (this.prevBtn.style.display === 'flex') {
       promises.push(this.runAnimation(this.prevBtn, 'button', 'close'));
       promises.push(this.runAnimation(this.nextBtn, 'button', 'close'));
@@ -456,7 +533,25 @@ class SimpleModal {
     if (index < 0 || index >= this.groupList.length || this.isAnimating) return;
     this.isAnimating = true;
     
-    this.lastWrapperSize = { w: this.wrapper.offsetWidth, h: this.wrapper.offsetHeight };
+    // 【重要】サイズロック：現在表示されているサイズで枠を固定する
+    // 画像モードの場合、画像のサイズを先に固定（Wrapper固定による再計算の影響を受けないようにするため）
+    if (this.currentMode === 'image') {
+        // 画像コンテナも固定
+        const containerRect = this.imageContainer.getBoundingClientRect();
+        this.imageContainer.style.width = `${containerRect.width}px`;
+        this.imageContainer.style.height = `${containerRect.height}px`;
+
+        // 画像自体も固定
+        const imgRect = this.modalImage.getBoundingClientRect();
+        this.modalImage.style.width = `${imgRect.width}px`;
+        this.modalImage.style.height = `${imgRect.height}px`;
+        this.modalImage.style.maxWidth = 'none';
+        this.modalImage.style.maxHeight = 'none';
+    }
+
+    // Wrapperを固定
+    this.wrapper.style.width = `${this.wrapper.offsetWidth}px`;
+    this.wrapper.style.height = `${this.wrapper.offsetHeight}px`;
     
     // 現在のコンテンツをフェードアウト
     const target = this.currentMode === 'image' ? this.modalImage : this.inlineContainer;
@@ -467,6 +562,9 @@ class SimpleModal {
     this.updatePagination();
 
     if (this.currentMode === 'image') {
+      if (this.spinner) this.spinner.classList.remove('simpleModal-hidden');
+      // 画像のsrcを変更する
+      // onloadイベントが発火し、そこで animateResize → showContent が呼ばれる
       this.modalImage.src = el.getAttribute('href');
     } else {
       const targetId = el.getAttribute('href')?.startsWith('#') ? el.getAttribute('href').substring(1) : el.dataset.target;
@@ -474,6 +572,7 @@ class SimpleModal {
       if (targetEl) {
         this.inlineContainer.innerHTML = targetEl.innerHTML;
         document.getElementById('modalTitle').textContent = el.textContent;
+        // インラインモードの場合もリサイズアニメーションを呼ぶ
         await this.animateResize(this.wrapper);
         this.showContent(true, false);
       }
@@ -496,7 +595,6 @@ class SimpleModal {
     }
 
     if (isInitial) {
-      // 初回のみモーダル全体の開きアニメーションを並行実行
       promises.push(this.runAnimation(this.content, 'content', 'open'));
     }
 
